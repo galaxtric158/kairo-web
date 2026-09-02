@@ -5,8 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
 
-gsap.registerPlugin(ScrollTrigger);
-
 interface AnimatedCounterProps {
   value: number;
   duration?: number;

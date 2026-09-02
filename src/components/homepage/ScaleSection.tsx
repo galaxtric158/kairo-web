@@ -1,54 +1,135 @@
 "use client";
 
-import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { MODEL_SPECS } from "@/lib/constants";
+import { ParameterField } from "@/components/ui/ParameterField";
+
+const stats = [
+  { label: "Layers", value: MODEL_SPECS.layers },
+  { label: "Heads", value: MODEL_SPECS.attentionHeads },
+  { label: "Hidden", value: MODEL_SPECS.hiddenSize },
+  { label: "FFN", value: MODEL_SPECS.ffnIntermediate },
+];
+
+const DIGITS = "0123456789".split("");
+
+function ScrambleCounter({
+  value,
+  duration = 2.5,
+  className,
+}: {
+  value: number;
+  duration?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReduced) {
+      el.textContent = value.toLocaleString("en-US");
+      return;
+    }
+
+    const finalStr = value.toLocaleString("en-US");
+    const scrambleDuration = 0.4;
+    const countDuration = duration - scrambleDuration;
+
+    const trigger = ScrollTrigger.create({
+      trigger: el,
+      start: "top 85%",
+      once: true,
+      onEnter: () => {
+        const startTime = performance.now();
+
+        const animate = () => {
+          const now = performance.now();
+          const elapsed = (now - startTime) / 1000;
+
+          if (elapsed < scrambleDuration) {
+            // Scramble phase: show random digits
+            const scrambled = finalStr
+              .split("")
+              .map((char) => {
+                if (char === ",") return ",";
+                return DIGITS[Math.floor(Math.random() * DIGITS.length)];
+              })
+              .join("");
+            el.textContent = scrambled;
+            requestAnimationFrame(animate);
+          } else if (elapsed < duration) {
+            // Count phase: interpolate from 0 to value
+            const progress = (elapsed - scrambleDuration) / countDuration;
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const current = Math.round(value * eased);
+            el.textContent = current.toLocaleString("en-US");
+            requestAnimationFrame(animate);
+          } else {
+            el.textContent = finalStr;
+          }
+        };
+
+        requestAnimationFrame(animate);
+      },
+    });
+
+    return () => trigger.kill();
+  }, [value, duration]);
+
+  return (
+    <span ref={ref} className={`tabular-nums ${className ?? ""}`}>
+      0
+    </span>
+  );
+}
 
 export function ScaleSection() {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 coord-lines opacity-50" />
+    <section className="py-20 md:py-32 relative overflow-hidden">
+      <ParameterField className="z-0 opacity-20" cols={56} rows={16} spacing={14} />
+      <div className="absolute inset-0 coord-lines opacity-50 z-[1]" />
 
-      <div className="relative max-w-[1200px] mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
         <ScrollReveal>
-          <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary mb-8">
-            Parameters
+          <ScrambleCounter
+            value={MODEL_SPECS.parameterCount}
+            duration={2.5}
+            className="text-display text-7xl sm:text-8xl md:text-9xl font-mono font-semibold text-text-primary"
+          />
+          <div className="mt-4 text-label text-[11px] font-mono text-text-tertiary uppercase">
+            parameters
           </div>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.1}>
-          <AnimatedCounter
-            value={MODEL_SPECS.parameterCount}
-            duration={2.5}
-            className="text-7xl sm:text-8xl md:text-9xl font-mono font-semibold text-text-primary tracking-tight"
-          />
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.3}>
-          <p className="mt-8 text-text-secondary max-w-md mx-auto">
-            Every parameter placed intentionally. Small enough to understand
-            completely, large enough to be meaningful.
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.4}>
-          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-2xl mx-auto">
-            {[
-              { label: "Layers", value: MODEL_SPECS.layers },
-              { label: "Heads", value: MODEL_SPECS.attentionHeads },
-              { label: "Hidden", value: MODEL_SPECS.hiddenSize },
-              { label: "FFN", value: MODEL_SPECS.ffnIntermediate },
-            ].map((stat) => (
+        <ScrollReveal delay={0.2}>
+          <div className="mt-16 flex items-center justify-center gap-12 md:gap-16">
+            {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="font-mono text-3xl md:text-4xl font-medium text-accent tabular-nums">
                   {stat.value}
                 </div>
-                <div className="mt-2 text-xs font-mono text-text-tertiary uppercase tracking-wider">
+                <div className="mt-2 text-label text-[11px] font-mono text-text-tertiary uppercase">
                   {stat.label}
                 </div>
               </div>
             ))}
           </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.3}>
+          <p className="mt-16 text-body text-text-secondary max-w-md mx-auto">
+            Every parameter placed intentionally. Small enough to understand
+            completely, large enough to be meaningful.
+          </p>
         </ScrollReveal>
       </div>
     </section>

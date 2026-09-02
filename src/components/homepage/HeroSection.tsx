@@ -2,7 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { MODEL_SPECS } from "@/lib/constants";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { MagneticElement } from "@/components/ui/MagneticElement";
+import { MathGrid } from "@/components/ui/MathGrid";
+import { CursorGlow } from "@/components/ui/CursorGlow";
 
 const ParticleField = dynamic(
   () =>
@@ -10,62 +12,58 @@ const ParticleField = dynamic(
   { ssr: false }
 );
 
+const CelestialCanvas = dynamic(
+  () => import("@/components/three/CelestialCanvas"),
+  { ssr: false }
+);
+
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
       <ParticleField />
+      <CelestialCanvas />
+      <MathGrid className="z-[2] opacity-60" />
+      <CursorGlow className="z-[3]" size={500} opacity={0.05} />
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
-        <ScrollReveal delay={0.2} y={30}>
-          <div className="font-mono text-xs tracking-[0.3em] uppercase text-text-tertiary mb-8">
-            Decoder-Only Transformer
-          </div>
-        </ScrollReveal>
+        <h1 className="font-mono text-display text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-semibold text-text-primary leading-none animate-hero-title">
+          KAIRO
+        </h1>
 
-        <ScrollReveal delay={0.4} y={40}>
-          <h1 className="font-mono text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-semibold tracking-[-0.04em] text-text-primary leading-none">
-            KAIRO
-          </h1>
-        </ScrollReveal>
+        <div className="mt-6 font-mono text-ui text-sm text-accent tabular-nums animate-hero-subtitle">
+          {MODEL_SPECS.parameterCount.toLocaleString()} parameters
+          <span className="text-text-tertiary mx-2">/</span>
+          {MODEL_SPECS.layers} layers
+          <span className="text-text-tertiary mx-2">/</span>
+          {MODEL_SPECS.attentionHeads} heads
+        </div>
 
-        <ScrollReveal delay={0.6} y={20}>
-          <div className="mt-8 flex items-center justify-center gap-6 font-mono text-sm text-text-secondary">
-            <span className="tabular-nums">
-              {MODEL_SPECS.parameterCount.toLocaleString()} parameters
-            </span>
-            <span className="text-text-tertiary">·</span>
-            <span>{MODEL_SPECS.layers} layers</span>
-            <span className="text-text-tertiary">·</span>
-            <span>{MODEL_SPECS.attentionHeads} heads</span>
-          </div>
-        </ScrollReveal>
+        <p className="mt-5 text-body text-text-secondary max-w-md mx-auto animate-hero-subtitle" style={{ animationDelay: "0.1s" }}>
+          A decoder-only Transformer built from scratch
+          using PyTorch primitives.
+        </p>
 
-        <ScrollReveal delay={0.8} y={15}>
-          <p className="mt-6 text-text-secondary max-w-lg mx-auto leading-relaxed">
-            Built from scratch using PyTorch primitives.
-            <br />
-            No external model libraries.
-          </p>
-        </ScrollReveal>
-
-        <ScrollReveal delay={1.0} y={10}>
-          <div className="mt-12 flex items-center justify-center gap-1 text-text-tertiary">
-            <span className="text-xs font-mono tracking-wider">Scroll</span>
-            <svg
-              className="w-4 h-4 animate-bounce"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
+        <div className="mt-8 flex items-center justify-center gap-4 animate-hero-subtitle" style={{ animationDelay: "0.2s" }}>
+          <MagneticElement strength={0.3}>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/10 rounded-md text-ui text-[13px] text-text-primary hover:border-accent/40 hover:text-accent transition-all duration-150 active:scale-[0.97]"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-              />
-            </svg>
-          </div>
-        </ScrollReveal>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              GitHub
+            </a>
+          </MagneticElement>
+          <a
+            href="/docs"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-ui text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 active:opacity-70"
+          >
+            Documentation
+          </a>
+        </div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg-primary to-transparent z-10" />

@@ -4,8 +4,6 @@ import { useRef, useEffect, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 interface ScrollRevealProps {
   children: ReactNode;
   className?: string;
@@ -18,8 +16,8 @@ export function ScrollReveal({
   children,
   className = "",
   delay = 0,
-  y = 24,
-  duration = 0.8,
+  y = 16,
+  duration = 0.4,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -38,9 +36,23 @@ export function ScrollReveal({
 
     gsap.set(el, { opacity: 0, y });
 
+    const rect = el.getBoundingClientRect();
+    const alreadyInView = rect.top < window.innerHeight * 0.88;
+
+    if (alreadyInView) {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration,
+        delay,
+        ease: "power3.out",
+      });
+      return;
+    }
+
     const trigger = ScrollTrigger.create({
       trigger: el,
-      start: "top 85%",
+      start: "top 90%",
       once: true,
       onEnter: () => {
         gsap.to(el, {
