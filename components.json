@@ -20,12 +20,6 @@
   "iconLibrary": "lucide",
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json",
-    "@componentry": "https://componentry.fun/r/{name}.json",
-    "@aceternity": {
-      "url": "https://ui.aceternity.com/registry/{name}.json",
-      "headers": {
-        "Authorization": "Bearer aceternity_5...24a904"
-      }
-    }
+    "@componentry": "https://componentry.fun/r/{name}.json"
   }
 }

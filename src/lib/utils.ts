@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { useState, useEffect } from "react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,26 +26,4 @@ export function hexToRgba(hex: string, alpha: number): string {
   const rgb = hexToRgb(hex);
   if (!rgb) return `rgba(212, 168, 83, ${alpha})`;
   return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-}
-
-export function useAccentColor(): string {
-  const [accent, setAccent] = useState("#d4a853");
-
-  useEffect(() => {
-    const read = () => {
-      const raw = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent-primary")
-        .trim();
-      if (raw) setAccent(raw);
-    };
-    read();
-    const observer = new MutationObserver(read);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  return accent;
 }

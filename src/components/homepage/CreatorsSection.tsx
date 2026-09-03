@@ -10,19 +10,19 @@ import {
 
 const creators: OrbitStackItem[] = [
   {
-    name: "Edmund",
-    role: "Creator",
+    name: "Edmund Kusnadi",
+    role: "Founder",
     description:
-      "Architect of Kairo — built the entire transformer from scratch, layer by layer, with PyTorch primitives.",
-    initials: "EM",
+      "Fueling the creative fire behind Kairo. Helping shape its direction and purposes.",
+    initials: "EK",
     accent: "#d4a853",
     stat: "galaxtric158",
   },
   {
     name: "Nathanael Ethan",
-    role: "Collaborator",
+    role: "Founder",
     description:
-      "Contributed to the development and evolution of Kairo, helping shape its direction and capabilities.",
+      "Working on the minds behind Kairo. Shaping the intellectual drive behind Kairo's capabilities; creating the tokenizer and its PyTorch primitives from scratch.",
     initials: "NE",
     accent: "#888888",
     stat: "Nathanael-Ethan",
@@ -37,9 +37,6 @@ export function CreatorsSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         <ScrollReveal>
           <div className="text-center mb-16">
-            <div className="text-label text-[11px] font-mono uppercase text-text-tertiary mb-4">
-              Built by
-            </div>
             <ScrollKineticText
               text="The minds behind Kairo"
               className="text-heading text-3xl md:text-4xl font-semibold text-text-primary"

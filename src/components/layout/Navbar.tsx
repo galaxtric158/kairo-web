@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { MagneticElement } from "@/components/ui/MagneticElement";
 import { GlassOverlay } from "@/components/ui/GlassMaterial";
 
 export function Navbar() {
@@ -29,10 +28,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
+        "fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-200",
         scrolled
           ? "bg-white/[0.05] backdrop-blur-xl backdrop-saturate-150 border-b border-white/[0.06]"
-          : "bg-transparent"
+          : "bg-transparent border-b-transparent"
       )}
     >
       <nav className="max-w-[1200px] mx-auto px-6 h-14 flex items-center justify-between">
@@ -47,26 +46,23 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-6">
           {NAV_LINKS.map((link) => (
-            <MagneticElement key={link.href} strength={0.15}>
               <Link
+                key={link.href}
                 href={link.href}
-                className="relative text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 py-2"
+                className="relative text-[13px] text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 py-3"
               >
                 {link.label}
               </Link>
-            </MagneticElement>
           ))}
           <div className="w-px h-3 bg-white/10 mx-1" />
-          <MagneticElement strength={0.2}>
             <a
-              href="https://github.com"
+              href="https://github.com/Nathanael-Ethan/Kairo"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[13px] text-text-secondary hover:text-text-primary transition-colors duration-150 py-2"
+              className="text-[13px] text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 py-3"
             >
               GitHub
             </a>
-          </MagneticElement>
         </div>
 
         <button
@@ -77,13 +73,13 @@ export function Navbar() {
         >
           <span
             className={cn(
-              "w-4 h-px bg-text-primary transition-all duration-200 ease-out",
+              "w-4 h-px bg-text-primary transition-transform duration-200 ease-out",
               mobileOpen && "rotate-45 translate-y-[3.5px]"
             )}
           />
           <span
             className={cn(
-              "w-4 h-px bg-text-primary transition-all duration-200 ease-out",
+              "w-4 h-px bg-text-primary transition-transform duration-200 ease-out",
               mobileOpen && "-rotate-45 -translate-y-[3.5px]"
             )}
           />
@@ -98,17 +94,17 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="text-lg text-text-secondary hover:text-text-primary transition-colors duration-150 active:opacity-70 py-3 border-b border-white/[0.04]"
+              className="text-lg text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 active:opacity-70 py-4 border-b border-white/[0.04]"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               {link.label}
             </a>
           ))}
           <a
-            href="https://github.com"
+            href="https://github.com/Nathanael-Ethan/Kairo"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg text-text-secondary hover:text-text-primary transition-colors duration-150 active:opacity-70 py-3 mt-4"
+            className="text-lg text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 active:opacity-70 py-4 mt-4"
           >
             GitHub
           </a>

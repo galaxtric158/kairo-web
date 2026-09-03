@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Navbar } from "@/components/layout/Navbar";
+import { DockNav } from "@/components/layout/Dock";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/homepage/HeroSection";
 import { DefinitionSection } from "@/components/homepage/DefinitionSection";
@@ -42,29 +42,19 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
+      <DockNav activePath="/" />
       <main>
         <HeroSection />
-        <div className="section-divider" />
         <DefinitionSection />
-        <div className="section-divider" />
         <ScaleSection />
-        <div className="section-divider" />
         <ArchitectureSection />
-        <div className="section-divider" />
         <ThoughtProcessSection />
-        <div className="section-divider" />
         <MechanismSection />
-        <div className="section-divider" />
         <ImplementationSection />
-        <div className="section-divider" />
         <FeatureShowcaseSection />
         <CurrentStateSection />
-        <div className="section-divider" />
         <CreatorsSection />
-        <div className="section-divider" />
         <RoadmapSection />
-        <div className="section-divider" />
         <CTASection />
       </main>
       <Footer />

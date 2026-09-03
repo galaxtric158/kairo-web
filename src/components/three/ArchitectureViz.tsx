@@ -8,6 +8,17 @@ function LayerStack() {
   const groupRef = useRef<THREE.Group>(null!);
   const layers = 8;
   const spacing = 0.6;
+  const reducedMotion = useRef(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotion.current = mql.matches;
+    const onChange = (e: MediaQueryListEvent) => {
+      reducedMotion.current = e.matches;
+    };
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   const materials = useMemo(
     () =>
@@ -34,7 +45,7 @@ function LayerStack() {
   );
 
   useFrame((state) => {
-    if (!groupRef.current) return;
+    if (!groupRef.current || reducedMotion.current) return;
     const time = state.clock.getElapsedTime();
     groupRef.current.rotation.x = Math.sin(time * 0.15) * 0.15 + 0.3;
     groupRef.current.rotation.y = time * 0.05;
@@ -64,9 +75,20 @@ function LayerStack() {
 
 function FlowParticle({ layerCount, spacing }: { layerCount: number; spacing: number }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const reducedMotion = useRef(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    reducedMotion.current = mql.matches;
+    const onChange = (e: MediaQueryListEvent) => {
+      reducedMotion.current = e.matches;
+    };
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || reducedMotion.current) return;
     const time = state.clock.getElapsedTime();
     const cycle = (time * 0.4) % layerCount;
     const layerIndex = Math.floor(cycle);

@@ -62,13 +62,43 @@
   animation: hero-subtitle-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+/* Cursor blink — terminal caret */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Code line entrance — staggered fade-in */
+@keyframes code-line-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-title,
-  .animate-hero-subtitle {
+  .animate-hero-subtitle,
+  .animate-cursor-blink {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
+  }
+
+  /* Code lines: instant reveal, no stagger */
+  code > div {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
@@ -200,15 +230,6 @@ nav a:active,
   font-variant-numeric: tabular-nums;
 }
 
-.grid-bg {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
 .coord-lines {
   background-image: linear-gradient(
       rgba(212, 168, 83, 0.03) 1px,
@@ -216,30 +237,6 @@ nav a:active,
     ),
     linear-gradient(90deg, rgba(212, 168, 83, 0.03) 1px, transparent 1px);
   background-size: 96px 96px;
-}
-
-.section-divider {
-  border-top: 1px solid var(--border);
-}
-
-/* Hover gating — only on pointer devices */
-@media (hover: hover) and (pointer: fine) {
-  .hover-lift:hover {
-    transform: translateY(-1px);
-  }
-
-  .hover-scale:hover {
-    transform: scale(1.02);
-  }
-
-  /* Hide default cursor when custom cursor is active */
-  body {
-    cursor: none;
-  }
-
-  a, button, input, textarea, select, [role="button"] {
-    cursor: none;
-  }
 }
 
 /* Reduced motion */

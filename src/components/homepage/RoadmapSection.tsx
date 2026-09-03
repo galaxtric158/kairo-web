@@ -106,9 +106,6 @@ export function RoadmapSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         <ScrollReveal>
           <div className="text-center mb-16">
-            <div className="text-label text-[11px] font-mono uppercase text-text-tertiary mb-4">
-              Roadmap
-            </div>
             <ScrollKineticText
               text="What comes next"
               className="text-heading text-3xl md:text-4xl font-semibold text-text-primary"
@@ -120,10 +117,17 @@ export function RoadmapSection() {
         </ScrollReveal>
 
         <div ref={timelineRef} className="relative">
-          {/* Central timeline line */}
-          <div className="absolute left-1/2 -translate-x-px top-0 bottom-0 w-[2px] bg-white/[0.06]">
+          {/* Central timeline line — hidden on mobile, visible on md+ */}
+          <div className="hidden md:block absolute left-1/2 -translate-x-px top-0 bottom-0 w-[2px] bg-white/[0.06]">
             <div
               ref={lineRef}
+              className="absolute inset-0 bg-gradient-to-b from-accent via-accent/60 to-accent/20 origin-top"
+            />
+          </div>
+
+          {/* Mobile timeline line — left-aligned */}
+          <div className="md:hidden absolute left-2 top-0 bottom-0 w-[2px] bg-white/[0.06]">
+            <div
               className="absolute inset-0 bg-gradient-to-b from-accent via-accent/60 to-accent/20 origin-top"
             />
           </div>
@@ -139,8 +143,8 @@ export function RoadmapSection() {
                   key={phase.name}
                   className="relative flex items-start"
                 >
-                  {/* Timeline dot */}
-                  <div className="absolute left-1/2 -translate-x-1/2 z-10">
+                  {/* Timeline dot — mobile: left-aligned, desktop: center */}
+                  <div className="md:absolute md:left-1/2 md:-translate-x-1/2 absolute left-2 -translate-x-1/2 z-10">
                     <div
                       className={`w-4 h-4 rounded-full border-2 transition-colors duration-300 ${
                         isCompleted
@@ -150,18 +154,18 @@ export function RoadmapSection() {
                     />
                   </div>
 
-                  {/* Content - alternating sides */}
+                  {/* Content — mobile: full-width with left padding, desktop: alternating sides */}
                   <div
-                    className={`w-1/2 ${
-                      isLeft ? "pr-12 text-right" : "pl-12 ml-auto"
-                    }`}
+                    className={`md:w-1/2 w-full ${
+                      isLeft ? "md:pr-12 md:text-right" : "md:pl-12 md:ml-auto"
+                    } pl-8 md:pl-0`}
                   >
                     <ScrollReveal delay={phaseIndex * 0.05}>
                       <div className="pb-12">
                         {/* Phase label */}
                         <div
                           className={`inline-flex items-center gap-2 mb-3 ${
-                            isLeft ? "flex-row-reverse" : ""
+                            isLeft ? "md:flex-row-reverse" : ""
                           }`}
                         >
                           <span
@@ -213,7 +217,7 @@ export function RoadmapSection() {
 
                         {/* Status indicator */}
                         <div
-                          className={`mt-3 inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider ${
+                          className={`mt-3 text-[11px] font-mono uppercase tracking-wider ${
                             isCompleted
                               ? "text-accent/70"
                               : phase.status === "in-progress"
@@ -221,15 +225,6 @@ export function RoadmapSection() {
                               : "text-text-tertiary/50"
                           }`}
                         >
-                          <div
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              isCompleted
-                                ? "bg-accent/60"
-                                : phase.status === "in-progress"
-                                ? "bg-text-secondary/60"
-                                : "bg-text-tertiary/30"
-                            }`}
-                          />
                           {isCompleted
                             ? "Done"
                             : phase.status === "in-progress"
@@ -244,8 +239,8 @@ export function RoadmapSection() {
             })}
           </div>
 
-          {/* End cap */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-0">
+          {/* End cap — mobile: left-aligned, desktop: center */}
+          <div className="md:absolute md:left-1/2 md:-translate-x-1/2 absolute left-2 -translate-x-1/2 bottom-0">
             <div className="w-3 h-3 rounded-full border-2 border-white/10 bg-bg-primary" />
           </div>
         </div>

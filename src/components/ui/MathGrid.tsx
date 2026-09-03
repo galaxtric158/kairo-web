@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect } from "react";
 
 interface MathGridProps {
   className?: string;
@@ -19,96 +19,96 @@ export function MathGrid({
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const animationRef = useRef<number>(0);
   const isTouchDevice = useRef(false);
+  const inViewRef = useRef(false);
 
-  const draw = useCallback(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    isTouchDevice.current = window.matchMedia("(hover: none) or (pointer: coarse)").matches;
 
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
+    const draw = () => {
+      if (!inViewRef.current) {
+        animationRef.current = 0;
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-    if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-    }
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
 
-    const w = rect.width;
-    const h = rect.height;
+      if (canvas.width !== rect.width * dpr || canvas.height !== rect.height * dpr) {
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+      }
 
-    ctx.clearRect(0, 0, w, h);
+      const w = rect.width;
+      const h = rect.height;
 
-    const cols = Math.ceil(w / cellSize) + 1;
-    const rows = Math.ceil(h / cellSize) + 1;
-    const mx = mouseRef.current.x;
-    const my = mouseRef.current.y;
+      ctx.clearRect(0, 0, w, h);
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
-    ctx.lineWidth = 1;
+      const cols = Math.ceil(w / cellSize) + 1;
+      const rows = Math.ceil(h / cellSize) + 1;
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
 
-    // Draw vertical lines
-    for (let i = 0; i <= cols; i++) {
-      const x = i * cellSize;
-      const distToMouse = Math.abs(x - mx);
-      const brightness = isTouchDevice.current
-        ? 0.03
-        : Math.min(0.03 + (maxBrightness - 0.03) * Math.max(0, 1 - distToMouse / influenceRadius), maxBrightness);
-      ctx.strokeStyle = `rgba(255, 255, 255, ${brightness})`;
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, h);
-      ctx.stroke();
-    }
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+      ctx.lineWidth = 1;
 
-    // Draw horizontal lines
-    for (let j = 0; j <= rows; j++) {
-      const y = j * cellSize;
-      const distToMouse = Math.abs(y - my);
-      const brightness = isTouchDevice.current
-        ? 0.03
-        : Math.min(0.03 + (maxBrightness - 0.03) * Math.max(0, 1 - distToMouse / influenceRadius), maxBrightness);
-      ctx.strokeStyle = `rgba(255, 255, 255, ${brightness})`;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-      ctx.stroke();
-    }
+      for (let i = 0; i <= cols; i++) {
+        const x = i * cellSize;
+        const distToMouse = Math.abs(x - mx);
+        const brightness = isTouchDevice.current
+          ? 0.03
+          : Math.min(0.03 + (maxBrightness - 0.03) * Math.max(0, 1 - distToMouse / influenceRadius), maxBrightness);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${brightness})`;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
 
-    // Draw intersection dots near cursor
-    if (!isTouchDevice.current) {
-      const startCol = Math.max(0, Math.floor((mx - influenceRadius) / cellSize));
-      const endCol = Math.min(cols, Math.ceil((mx + influenceRadius) / cellSize));
-      const startRow = Math.max(0, Math.floor((my - influenceRadius) / cellSize));
-      const endRow = Math.min(rows, Math.ceil((my + influenceRadius) / cellSize));
+      for (let j = 0; j <= rows; j++) {
+        const y = j * cellSize;
+        const distToMouse = Math.abs(y - my);
+        const brightness = isTouchDevice.current
+          ? 0.03
+          : Math.min(0.03 + (maxBrightness - 0.03) * Math.max(0, 1 - distToMouse / influenceRadius), maxBrightness);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${brightness})`;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
 
-      for (let i = startCol; i <= endCol; i++) {
-        for (let j = startRow; j <= endRow; j++) {
-          const x = i * cellSize;
-          const y = j * cellSize;
-          const dist = Math.sqrt((x - mx) ** 2 + (y - my) ** 2);
-          if (dist < influenceRadius) {
-            const alpha = 0.15 * (1 - dist / influenceRadius);
-            ctx.fillStyle = `rgba(212, 168, 83, ${alpha})`;
-            ctx.beginPath();
-            ctx.arc(x, y, 2, 0, Math.PI * 2);
-            ctx.fill();
+      if (!isTouchDevice.current) {
+        const startCol = Math.max(0, Math.floor((mx - influenceRadius) / cellSize));
+        const endCol = Math.min(cols, Math.ceil((mx + influenceRadius) / cellSize));
+        const startRow = Math.max(0, Math.floor((my - influenceRadius) / cellSize));
+        const endRow = Math.min(rows, Math.ceil((my + influenceRadius) / cellSize));
+
+        for (let i = startCol; i <= endCol; i++) {
+          for (let j = startRow; j <= endRow; j++) {
+            const x = i * cellSize;
+            const y = j * cellSize;
+            const dist = Math.sqrt((x - mx) ** 2 + (y - my) ** 2);
+            if (dist < influenceRadius) {
+              const alpha = 0.15 * (1 - dist / influenceRadius);
+              ctx.fillStyle = `rgba(212, 168, 83, ${alpha})`;
+              ctx.beginPath();
+              ctx.arc(x, y, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
           }
         }
       }
-    }
 
-    animationRef.current = requestAnimationFrame(draw);
-  }, [cellSize, influenceRadius, maxBrightness]);
-
-  useEffect(() => {
-    isTouchDevice.current = window.matchMedia("(hover: none) or (pointer: coarse)").matches;
+      animationRef.current = requestAnimationFrame(draw);
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
@@ -119,17 +119,29 @@ export function MathGrid({
       mouseRef.current.y = -1000;
     };
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+        if (inViewRef.current && animationRef.current === 0) {
+          animationRef.current = requestAnimationFrame(draw);
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     animationRef.current = requestAnimationFrame(draw);
 
     return () => {
+      io.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [draw]);
+  }, [cellSize, influenceRadius, maxBrightness]);
 
   return (
     <canvas

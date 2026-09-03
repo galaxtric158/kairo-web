@@ -11,8 +11,7 @@ export function Footer() {
               KAIRO
             </span>
             <p className="mt-3 text-body text-sm text-text-secondary max-w-xs">
-              A decoder-only transformer implemented completely from scratch
-              using PyTorch primitives.
+              A decoder-only transformer built from scratch.
             </p>
           </div>
 
@@ -25,7 +24,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-body text-sm text-text-secondary hover:text-text-primary transition-colors duration-150"
+                  className="text-body text-sm text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 py-2"
                 >
                   {link.label}
                 </Link>
@@ -39,24 +38,18 @@ export function Footer() {
             </h3>
             <div className="flex flex-col gap-2">
               <a
-                href="https://github.com"
+                href="https://github.com/Nathanael-Ethan/Kairo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-body text-sm text-text-secondary hover:text-text-primary transition-colors duration-150"
+                className="text-body text-sm text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 py-2"
               >
                 GitHub
               </a>
-              <span className="text-body text-sm text-text-tertiary">
-                Playground: Coming soon
-              </span>
             </div>
           </div>
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-label text-[11px] text-text-tertiary font-mono">
-            Built from first principles
-          </span>
           <span className="text-label text-[11px] text-text-tertiary font-mono">
             ~10.23M parameters
           </span>

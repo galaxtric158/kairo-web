@@ -28,9 +28,6 @@ export function ArchitectureSection() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
           <div className="md:col-span-5">
             <ScrollReveal>
-              <div className="text-xs font-mono uppercase tracking-[0.3em] text-text-tertiary mb-4">
-                Architecture
-              </div>
               <ScrollKineticText
                 text="8 layers of computation"
                 className="text-3xl md:text-4xl font-semibold text-text-primary"

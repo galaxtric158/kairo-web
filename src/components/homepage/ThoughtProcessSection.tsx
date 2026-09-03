@@ -11,9 +11,6 @@ export function ThoughtProcessSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
           <ScrollReveal>
-            <div className="text-label text-[11px] font-mono uppercase text-text-tertiary mb-4">
-              How Kairo Thinks
-            </div>
             <ScrollKineticText
               text="Thought as computation"
               className="text-heading text-3xl md:text-4xl font-semibold text-text-primary"

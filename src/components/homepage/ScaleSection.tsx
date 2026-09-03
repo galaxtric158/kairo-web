@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import gsap from "gsap";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { MODEL_SPECS } from "@/lib/constants";
 import { ParameterField } from "@/components/ui/ParameterField";
+import { LetterCascade } from "@/components/ui/letter-cascade";
 
 const stats = [
   { label: "Layers", value: MODEL_SPECS.layers },
@@ -20,10 +20,12 @@ function ScrambleCounter({
   value,
   duration = 2.5,
   className,
+  onComplete,
 }: {
   value: number;
   duration?: number;
   className?: string;
+  onComplete?: () => void;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -37,6 +39,7 @@ function ScrambleCounter({
 
     if (prefersReduced) {
       el.textContent = value.toLocaleString("en-US");
+      onComplete?.();
       return;
     }
 
@@ -56,7 +59,6 @@ function ScrambleCounter({
           const elapsed = (now - startTime) / 1000;
 
           if (elapsed < scrambleDuration) {
-            // Scramble phase: show random digits
             const scrambled = finalStr
               .split("")
               .map((char) => {
@@ -67,14 +69,14 @@ function ScrambleCounter({
             el.textContent = scrambled;
             requestAnimationFrame(animate);
           } else if (elapsed < duration) {
-            // Count phase: interpolate from 0 to value
             const progress = (elapsed - scrambleDuration) / countDuration;
-            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
             const current = Math.round(value * eased);
             el.textContent = current.toLocaleString("en-US");
             requestAnimationFrame(animate);
           } else {
             el.textContent = finalStr;
+            onComplete?.();
           }
         };
 
@@ -83,7 +85,7 @@ function ScrambleCounter({
     });
 
     return () => trigger.kill();
-  }, [value, duration]);
+  }, [value, duration, onComplete]);
 
   return (
     <span ref={ref} className={`tabular-nums ${className ?? ""}`}>
@@ -93,25 +95,49 @@ function ScrambleCounter({
 }
 
 export function ScaleSection() {
+  const [scrambleDone, setScrambleDone] = useState(false);
+  const handleComplete = useCallback(() => setScrambleDone(true), []);
+
+  const displayText = MODEL_SPECS.parameterCount.toLocaleString("en-US");
+
   return (
     <section className="py-20 md:py-32 relative overflow-hidden">
       <ParameterField className="z-0 opacity-20" cols={56} rows={16} spacing={14} />
       <div className="absolute inset-0 coord-lines opacity-50 z-[1]" />
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 flex flex-col items-center">
         <ScrollReveal>
-          <ScrambleCounter
-            value={MODEL_SPECS.parameterCount}
-            duration={2.5}
-            className="text-display text-7xl sm:text-8xl md:text-9xl font-mono font-semibold text-text-primary"
-          />
-          <div className="mt-4 text-label text-[11px] font-mono text-text-tertiary uppercase">
-            parameters
+          <div className="overflow-hidden flex flex-col items-center">
+            {scrambleDone ? (
+              <LetterCascade
+                text={displayText}
+                staggerFrom="first"
+                staggerDuration={0.035}
+                stiffness={200}
+                damping={14}
+                className="text-display text-7xl sm:text-8xl lg:text-9xl font-mono font-semibold text-text-primary"
+                letterClassName="tabular-nums"
+              />
+            ) : (
+              <ScrambleCounter
+                value={MODEL_SPECS.parameterCount}
+                duration={2.5}
+                onComplete={handleComplete}
+                className="text-display text-7xl sm:text-8xl lg:text-9xl font-mono font-semibold text-text-primary"
+              />
+            )}
+            <div className="mt-4 text-label text-[11px] font-mono text-text-tertiary uppercase">
+              parameters
+            </div>
+            <p className="mt-8 text-body text-text-secondary max-w-md text-center">
+              Every parameter placed intentionally. Small enough to understand
+              completely, large enough to be meaningful.
+            </p>
           </div>
         </ScrollReveal>
 
         <ScrollReveal delay={0.2}>
-          <div className="mt-16 flex items-center justify-center gap-12 md:gap-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="font-mono text-3xl md:text-4xl font-medium text-accent tabular-nums">
@@ -123,13 +149,6 @@ export function ScaleSection() {
               </div>
             ))}
           </div>
-        </ScrollReveal>
-
-        <ScrollReveal delay={0.3}>
-          <p className="mt-16 text-body text-text-secondary max-w-md mx-auto">
-            Every parameter placed intentionally. Small enough to understand
-            completely, large enough to be meaningful.
-          </p>
         </ScrollReveal>
       </div>
     </section>

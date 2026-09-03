@@ -129,6 +129,7 @@ export default function CelestialCanvas() {
   const rafRef = useRef(0);
   const prefersReducedMotion = useRef(false);
   const accentRgbRef = useRef<[number, number, number]>([212, 168, 83]);
+  const inViewRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -172,11 +173,26 @@ export default function CelestialCanvas() {
       mouseRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
     };
 
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
+        if (inViewRef.current && rafRef.current === 0) {
+          rafRef.current = requestAnimationFrame(render);
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMouse, { passive: true });
     resize();
 
     const render = (time: number) => {
+      if (!inViewRef.current) {
+        rafRef.current = 0;
+        return;
+      }
       const w = window.innerWidth;
       const h = window.innerHeight;
       const cx = w * 0.5;
@@ -288,6 +304,7 @@ export default function CelestialCanvas() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      io.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouse);
       mql.removeEventListener("change", onMql);
