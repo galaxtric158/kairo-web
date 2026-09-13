@@ -17,7 +17,7 @@ export function PageWrapper({ children }: { children: React.ReactNode }) {
             KAIRO
           </Link>
           <span className="text-xs text-text-tertiary font-mono">
-            ~10.23M parameters
+            An AI engineering environment for physical computing
           </span>
         </div>
       </footer>

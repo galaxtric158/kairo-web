@@ -226,7 +226,7 @@ export default function CelestialCanvas() {
 
         const twinkle = reduced
           ? 1
-          : 0.6 + 0.4 * Math.sin(t * s.twinkleSpeed + s.twinklePhase);
+          : 0.75 + 0.25 * Math.sin(t * s.twinkleSpeed + s.twinklePhase);
         const flash = reduced
           ? 0
           : Math.pow(
@@ -242,13 +242,6 @@ export default function CelestialCanvas() {
         ctx.arc(sx, sy, shineRadius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${alpha})`;
         ctx.fill();
-
-        if (flash > 0.3) {
-          ctx.beginPath();
-          ctx.arc(sx, sy, shineRadius * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${flash * 0.08 * fade})`;
-          ctx.fill();
-        }
       }
 
       for (let i = 0; i < lines.length; i++) {

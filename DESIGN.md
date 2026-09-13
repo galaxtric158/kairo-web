@@ -41,7 +41,7 @@ Scale: 4.5rem hero → 3rem h1 → 2rem h2 → 1.25rem h3 → 1rem body → 0.87
 
 ## Components
 
-GlassPanel: translucent surface with backdrop-filter blur. Button: minimal, border-based, accent on hover. CodeBlock: syntax-highlighted, dark background. AnimatedCounter: number animation. ScrollReveal: GSAP scroll-triggered fade. Badge: small label. ParameterGrid: dot grid visualization.
+GlassPanel: translucent surface with backdrop-filter blur. Button: minimal, border-based, accent on hover. CodeBlock: syntax-highlighted, dark background. Terminal: command-output panel with status glyphs. ScrollReveal: GSAP scroll-triggered fade. Badge: small label. StatusChip: mono concept/planned marker.
 
 ## Motion
 

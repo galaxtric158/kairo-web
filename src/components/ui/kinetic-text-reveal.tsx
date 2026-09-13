@@ -33,6 +33,8 @@ interface KineticTextRevealProps extends Omit<
 > {
   /** Text content to reveal. */
   text: string;
+  /** Element to render. Keeps heading hierarchy intact when set to h1-h3. */
+  as?: "h1" | "h2" | "h3" | "p" | "span";
   /** Additional CSS classes for the outer element. */
   className?: string;
   /** CSS classes applied to each animated text segment. */
@@ -157,16 +159,17 @@ export const KineticTextReveal = forwardRef<
   (
     {
       text,
+      as = "span",
       className,
       segmentClassName,
       maskClassName,
       splitBy = "words",
       direction = "up",
-      distance = 20,
-      stagger = 0.075,
+      distance = 12,
+      stagger = 0.04,
       staggerFrom = "start",
-      transition = { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
-      blur = true,
+      transition = { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
+      blur = false,
       autoPlay = true,
       delay = 0,
       onRevealStart,
@@ -207,6 +210,7 @@ export const KineticTextReveal = forwardRef<
     }, [autoPlay, delay, text, onRevealStart]);
 
     const offset = getOffset(direction, distance);
+    const Tag = as as "span";
 
     const variants: Variants = {
       hidden: shouldReduceMotion
@@ -232,7 +236,7 @@ export const KineticTextReveal = forwardRef<
     };
 
     return (
-      <span
+      <Tag
         className={cn(
           "inline-flex flex-wrap whitespace-pre-wrap align-baseline",
           splitBy === "lines" && "flex-col items-start",
@@ -280,7 +284,7 @@ export const KineticTextReveal = forwardRef<
             </span>
           );
         })}
-      </span>
+      </Tag>
     );
   },
 );

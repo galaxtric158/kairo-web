@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { ScrollKineticText } from "@/components/ui/ScrollKineticText";
 import {
   OrbitCardStack,
   type OrbitStackItem,
@@ -37,13 +36,9 @@ export function CreatorsSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         <ScrollReveal>
           <div className="text-center mb-16">
-            <ScrollKineticText
-              text="The minds behind Kairo"
-              className="text-heading text-3xl md:text-4xl font-semibold text-text-primary"
-              splitBy="words"
-              direction="up"
-              stagger={0.08}
-            />
+            <h2 className="text-heading text-3xl md:text-4xl font-semibold text-text-primary">
+              The minds behind Kairo
+            </h2>
           </div>
         </ScrollReveal>
 
@@ -53,9 +48,8 @@ export function CreatorsSection() {
               items={creators}
               defaultActiveIndex={0}
               spread={200}
-              lift={40}
+              lift={36}
               onActiveChange={(item) => setActiveMember(item)}
-              cardClassName="!bg-[#1a1814] !border-white/10 !text-[#e8e8e8]"
             />
           </div>
         </ScrollReveal>

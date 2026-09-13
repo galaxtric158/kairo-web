@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { GlassOverlay } from "@/components/ui/GlassMaterial";
@@ -9,12 +11,10 @@ import { GlassOverlay } from "@/components/ui/GlassMaterial";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 40));
 
   useEffect(() => {
     if (mobileOpen) {
@@ -39,21 +39,32 @@ export function Navbar() {
           <span className="font-mono text-sm font-medium tracking-[0.08em] text-text-primary">
             KAIRO
           </span>
-          <span className="text-text-tertiary text-[10px] font-mono tracking-widest uppercase">
-            10M
-          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-[13px] text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-colors duration-150 py-3"
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "relative text-[13px] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none transition-[color] duration-150 py-3",
+                  isActive ? "text-text-primary" : "text-text-secondary hover:text-text-primary"
+                )}
               >
                 {link.label}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute left-0 right-0 -bottom-px h-px origin-left bg-accent transition-transform duration-200 ease-[var(--ease-out)]",
+                    isActive ? "scale-x-100" : "scale-x-0"
+                  )}
+                />
               </Link>
-          ))}
+            );
+          })}
           <div className="w-px h-3 bg-white/10 mx-1" />
             <a
               href="https://github.com/Nathanael-Ethan/Kairo"

@@ -19,6 +19,7 @@ interface ScrollKineticTextProps {
   transition?: Transition;
   blur?: boolean;
   threshold?: number;
+  as?: "h1" | "h2" | "h3" | "p" | "span";
 }
 
 export function ScrollKineticText({
@@ -27,12 +28,13 @@ export function ScrollKineticText({
   segmentClassName,
   splitBy = "words",
   direction = "up",
-  distance = 20,
-  stagger = 0.075,
+  distance = 12,
+  stagger = 0.04,
   staggerFrom = "start",
   transition,
-  blur = true,
+  blur = false,
   threshold = 0.2,
+  as = "span",
 }: ScrollKineticTextProps) {
   const ref = useRef<KineticTextRevealRef>(null);
   const wrapperRef = useRef<HTMLSpanElement>(null);
@@ -62,6 +64,7 @@ export function ScrollKineticText({
       <KineticTextReveal
         ref={ref}
         text={text}
+        as={as}
         className={className}
         segmentClassName={segmentClassName}
         splitBy={splitBy}

@@ -21,9 +21,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kairo-10M. Built from Scratch.",
+  title: "Kairo. Why doesn't my hardware project work?",
   description:
-    "A ~10.23M parameter decoder-only Transformer implemented completely from scratch using PyTorch primitives.",
+    "Kairo is an AI engineering environment for physical computing. It inspects your project, reads the device, diagnoses failures, and verifies fixes.",
 };
 
 export default function RootLayout({

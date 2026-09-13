@@ -45,7 +45,8 @@ export function ScrollReveal({
         y: 0,
         duration,
         delay,
-        ease: "power3.out",
+        // Matches --ease-out token (cubic-bezier(0.23, 1, 0.32, 1))
+        ease: "expo.out",
       });
       return;
     }
@@ -60,7 +61,8 @@ export function ScrollReveal({
           y: 0,
           duration,
           delay,
-          ease: "power3.out",
+          // Matches --ease-out token (cubic-bezier(0.23, 1, 0.32, 1))
+          ease: "expo.out",
         });
       },
     });

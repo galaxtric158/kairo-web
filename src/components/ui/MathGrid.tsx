@@ -27,11 +27,8 @@ export function MathGrid({
 
     isTouchDevice.current = window.matchMedia("(hover: none) or (pointer: coarse)").matches;
 
-    const draw = () => {
-      if (!inViewRef.current) {
-        animationRef.current = 0;
-        return;
-      }
+    // Static grid — redrawn on demand (mount, resize, mouse move), never looped.
+    const drawOnce = () => {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
@@ -104,27 +101,36 @@ export function MathGrid({
           }
         }
       }
+    };
 
-      animationRef.current = requestAnimationFrame(draw);
+    const scheduleDraw = () => {
+      if (!inViewRef.current) return;
+      if (animationRef.current !== 0) return;
+      animationRef.current = requestAnimationFrame(() => {
+        animationRef.current = 0;
+        drawOnce();
+      });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
+      scheduleDraw();
     };
 
     const handleMouseLeave = () => {
       mouseRef.current.x = -1000;
       mouseRef.current.y = -1000;
+      scheduleDraw();
     };
+
+    const handleResize = () => scheduleDraw();
 
     const io = new IntersectionObserver(
       ([entry]) => {
         inViewRef.current = entry.isIntersecting;
-        if (inViewRef.current && animationRef.current === 0) {
-          animationRef.current = requestAnimationFrame(draw);
-        }
+        if (inViewRef.current) scheduleDraw();
       },
       { threshold: 0 }
     );
@@ -132,14 +138,17 @@ export function MathGrid({
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("resize", handleResize);
 
-    animationRef.current = requestAnimationFrame(draw);
+    drawOnce();
 
     return () => {
       io.disconnect();
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationRef.current);
+      animationRef.current = 0;
     };
   }, [cellSize, influenceRadius, maxBrightness]);
 

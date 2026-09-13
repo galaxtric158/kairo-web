@@ -62,6 +62,36 @@
   animation: hero-subtitle-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+/* Content swap — AttentionInteraction + route-aware fades */
+@keyframes attention-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-attention-in {
+  animation: attention-in 0.15s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* Dynamic canvas mount — avoid teleport */
+@keyframes canvas-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-canvas-in {
+  animation: canvas-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
 /* Cursor blink — terminal caret */
 @keyframes cursor-blink {
   0%, 100% { opacity: 1; }
@@ -87,7 +117,9 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-hero-title,
   .animate-hero-subtitle,
-  .animate-cursor-blink {
+  .animate-cursor-blink,
+  .animate-attention-in,
+  .animate-canvas-in {
     animation: none;
     opacity: 1;
     transform: none;

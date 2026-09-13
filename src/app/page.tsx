@@ -4,16 +4,14 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { DockNav } from "@/components/layout/Dock";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/homepage/HeroSection";
-import { DefinitionSection } from "@/components/homepage/DefinitionSection";
-import { ScaleSection } from "@/components/homepage/ScaleSection";
-import { ArchitectureSection } from "@/components/homepage/ArchitectureSection";
-import { ThoughtProcessSection } from "@/components/homepage/ThoughtProcessSection";
+import { ProblemSection } from "@/components/homepage/ProblemSection";
 import { MechanismSection } from "@/components/homepage/MechanismSection";
-import { ImplementationSection } from "@/components/homepage/ImplementationSection";
-import { FeatureShowcaseSection } from "@/components/homepage/FeatureShowcaseSection";
+import { GraphSection } from "@/components/homepage/GraphSection";
+import { EcosystemSection } from "@/components/homepage/EcosystemSection";
 import { CurrentStateSection } from "@/components/homepage/CurrentStateSection";
 import { CreatorsSection } from "@/components/homepage/CreatorsSection";
 import { RoadmapSection } from "@/components/homepage/RoadmapSection";
@@ -22,7 +20,11 @@ import { CTASection } from "@/components/homepage/CTASection";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const prefersReduced = useReducedMotion();
+
   useEffect(() => {
+    if (prefersReduced) return;
+
     const lenis = new Lenis({
       autoRaf: false,
     });
@@ -38,20 +40,17 @@ export default function Home() {
       lenis.destroy();
       gsap.ticker.remove(lenis.raf);
     };
-  }, []);
+  }, [prefersReduced]);
 
   return (
     <>
       <DockNav activePath="/" />
       <main>
         <HeroSection />
-        <DefinitionSection />
-        <ScaleSection />
-        <ArchitectureSection />
-        <ThoughtProcessSection />
+        <ProblemSection />
         <MechanismSection />
-        <ImplementationSection />
-        <FeatureShowcaseSection />
+        <GraphSection />
+        <EcosystemSection />
         <CurrentStateSection />
         <CreatorsSection />
         <RoadmapSection />

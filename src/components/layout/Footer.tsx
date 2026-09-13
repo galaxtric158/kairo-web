@@ -11,7 +11,7 @@ export function Footer() {
               KAIRO
             </span>
             <p className="mt-3 text-body text-sm text-text-secondary max-w-xs">
-              A decoder-only transformer built from scratch.
+              An AI engineering environment for physical computing.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export function Footer() {
 
         <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-label text-[11px] text-text-tertiary font-mono">
-            ~10.23M parameters
+            Concept stage. Nothing here is a shipped product yet
           </span>
         </div>
       </div>

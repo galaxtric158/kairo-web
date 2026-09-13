@@ -2,9 +2,33 @@ import { PageWrapper } from "@/components/layout/PageWrapper";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Architecture. Kairo-10M.",
-  description: "Interactive architecture deep-dive for the Kairo-10M transformer model.",
+  title: "Architecture. Kairo.",
+  description:
+    "The system around the model: project graph, diagnosis engine, device integrations, verification, and memory.",
 };
+
+const layers = [
+  {
+    name: "Project graph",
+    text: "One structured picture of the whole system: code, pins, parts, libraries, telemetry, history, and the relationships between them. Everything the agent knows lives here, not scattered across chat turns.",
+  },
+  {
+    name: "Diagnosis engine",
+    text: "Deterministic checks first (pin conflicts, bus scans, library faults), then one model call over a structured evidence bundle. Every claim must cite a log line, a scan result, or a config diff.",
+  },
+  {
+    name: "Device integrations",
+    text: "Build systems, flashers, serial monitors, and bus scanners the loop can drive itself: PlatformIO runs, I2C scans, and serial captures without copy-paste.",
+  },
+  {
+    name: "Verification",
+    text: "The loop closes only on device evidence. Rebuild, reflash, re-observe. A fix that the hardware does not confirm is not a fix.",
+  },
+  {
+    name: "Memory",
+    text: "Project history persists across sessions: what broke, what evidence decided it, which fixes held. The dataset this creates is the long-term moat.",
+  },
+];
 
 export default function ArchitecturePage() {
   return (
@@ -15,56 +39,24 @@ export default function ArchitecturePage() {
             Architecture
           </h1>
           <p className="mt-4 text-text-secondary max-w-lg text-lg">
-            A deep-dive into the Kairo-10M transformer architecture.
+            The product is the engineering system, not the underlying model.
+            Five layers, each earning its place.
           </p>
 
-          <div className="mt-16 space-y-16">
-            <div>
-              <h2 className="text-2xl font-semibold text-text-primary mb-4">
-                Decoder-Only Transformer
-              </h2>
-              <p className="text-text-secondary max-w-2xl">
-                Kairo uses a decoder-only architecture, the same family as GPT.
-                Each token attends to all previous tokens through causal self-attention,
-                building contextual representations layer by layer.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-semibold text-text-primary mb-4">
-                Layer Structure
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="border border-border rounded-sm bg-bg-glass p-6">
-                  <h3 className="font-mono text-sm text-accent mb-2">Multi-Head Attention</h3>
-                  <p className="text-sm text-text-secondary">
-                    4 attention heads with 64-dimensional heads. Each head learns different
-                    relational patterns between tokens.
-                  </p>
-                </div>
-                <div className="border border-border rounded-sm bg-bg-glass p-6">
-                  <h3 className="font-mono text-sm text-accent mb-2">SwiGLU Feed-Forward</h3>
-                  <p className="text-sm text-text-secondary">
-                    Gated feed-forward network expanding from 256 to 640 dimensions,
-                    using the SwiGLU activation for better gradient flow.
-                  </p>
-                </div>
-                <div className="border border-border rounded-sm bg-bg-glass p-6">
-                  <h3 className="font-mono text-sm text-accent mb-2">RoPE</h3>
-                  <p className="text-sm text-text-secondary">
-                    Rotary Positional Embeddings encode position information through
-                    rotation matrices, enabling length generalization.
-                  </p>
-                </div>
-                <div className="border border-border rounded-sm bg-bg-glass p-6">
-                  <h3 className="font-mono text-sm text-accent mb-2">RMSNorm</h3>
-                  <p className="text-sm text-text-secondary">
-                    Root Mean Square Normalization stabilizes training by normalizing
-                    activations without mean centering.
-                  </p>
-                </div>
+          <div className="mt-16 space-y-4 max-w-3xl">
+            {layers.map((layer) => (
+              <div
+                key={layer.name}
+                className="rounded-sm border border-white/[0.06] bg-white/[0.02] p-6"
+              >
+                <h2 className="text-xl font-semibold text-text-primary">
+                  {layer.name}
+                </h2>
+                <p className="mt-2 text-text-secondary max-w-2xl">
+                  {layer.text}
+                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
